@@ -10,8 +10,12 @@ class scoreBoard(Turtle):
     def __init__(self):
         super().__init__()
         self.score = 0
-        with highScoreFile.open() as data:
-            self.highScore = int(data.read())
+        try:
+            self.highScore = int(highScoreFile.read_text().strip() or "0")
+        except (OSError, ValueError):
+            # A missing or malformed save file should not prevent the game
+            # from starting. The next new record will write a valid value.
+            self.highScore = 0
         self.color("white")
         self.hideturtle()
         self.penup()
